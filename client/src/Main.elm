@@ -13,43 +13,48 @@ update msg model =
     case msg of
         Increment -> 1
 
-toHtmlMsg : String -> (Html li)
-toHtmlMsg element = 
+toListItem : String -> (Html li)
+toListItem element = 
     li [] ( [ text element ] )
 
-type Method = Method String
-type Serves = Int
-type Time = Time String
-type Ingredients = List ( String )
-type Recipe = {
-    
-}
+type alias Method = String
+type alias Serves = Int
+type alias Time = String
+type alias Ingredients = List ( String )
+type alias Name = String
 
+type alias Recipe = { name: Name
+    , method: Method
+    , ingredients: Ingredients
+    , serves: Serves
+    , time: Time }
+
+recipes : List(Recipe)
+recipes = [Recipe 
+    "First recipe"
+    "Do this and that"
+    ["flour", "milk"]
+    2
+    "20 min"
+    , Recipe "Second recipe" "Do Something" ["stone"] 3 "5 min"]
+
+getName : Recipe -> Name
+getName recipe =
+    recipe.name
 
 view model = 
     let 
-        ingredients = 
-            ["20 g flour",
-            "50 ml milk"]
+        recipeNames : List ( Html Msg )
+        recipeNames = 
+            recipes 
+            |> List.map getName
+            |> List.map toListItem
         
-        method = "Do this. Then do that."
 
-        serves = 6
-
-        time = "1h 10min"
-
-        ingredientsAsHtml : List ( Html Msg ) 
-        ingredientsAsHtml = 
-            List.map toHtmlMsg ( ingredients )
     in
     div []
-        [ div [] [ text "Ingredients:" ]
-        , ul [] ingredientsAsHtml
-        , div [] [ text "Method: "]
-        , div [] [ text method ]
-        , div [] [ text ( "Serves: " ++ String.fromInt serves ) ]
-        , div [] [ text ( "Time to do it: " ++ time )]
-        ]
+        [ text "Recipes:"
+        , ul [] recipeNames ]
         
     
     
